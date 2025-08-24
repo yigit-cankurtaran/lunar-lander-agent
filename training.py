@@ -21,9 +21,19 @@ def train():
     )
 
     model = PPO(
-        "MlpPolicy"
+        "MlpPolicy", # CnnPolicy for images, MlpPolicies for other types
+        train_env,
+        learning_rate=3e-4,
+        batch_size=128,
+        n_steps=2048, # steps before model trains itself
+        n_epochs=10, # how many times model trains itself from step data
+)
+
+    model.learn(
+        total_timesteps=train_count,
+        callback=eval_callback,
+        progress_bar=True
     )
-    
 
 
 if __name__ == "__main__":
