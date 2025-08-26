@@ -3,13 +3,18 @@ from stable_baselines3 import PPO # wanna use this algo
 from stable_baselines3.common.env_util import make_vec_env
 from stable_baselines3.common.monitor import Monitor
 from stable_baselines3.common.callbacks import EvalCallback
-from stable_baselines3.common.utils import linear_schedule
 import os # creating folders and such
+
+def linear_schedule(initial_value):
+    # decaying from initial value to 0
+    def schedule_func(progress_remaining):
+        return progress_remaining * initial_value
+    return schedule_func
 
 def train(seed=0):
     train_env = make_vec_env("LunarLander-v3", n_envs=4, seed=seed)
-    eval_env = Monitor(gym.make("LunarLander-v3", render_mode="human"))
-    train_count = 3000000 # 3M
+    eval_env = Monitor(gym.make("LunarLander-v3", render_mode=None))
+    train_count = 1000000 # 1M
 
     os.makedirs("models", exist_ok=True)
     os.makedirs("logs", exist_ok=True)
@@ -24,7 +29,7 @@ def train(seed=0):
     model = PPO(
         "MlpPolicy", # CnnPolicy for images, MlpPolicies for other types
         train_env,
-        learning_rate=linear_schedule(3e-4, 1e-5),  # linear decay from 3e-4 to 1e-5
+        learning_rate=linear_schedule(3e-4),  # linear decay from 3e-4 to 0
         batch_size=128,
         n_steps=2048, # steps before model trains itself
         n_epochs=10, # how many times model trains itself from step data
