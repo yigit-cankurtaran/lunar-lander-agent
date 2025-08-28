@@ -10,6 +10,8 @@ def test_agent(model_path="models/best_model.zip", vec_normalize_path = "models/
 
     if os.path.exists(vec_normalize_path):
         env = VecNormalize.load(vec_normalize_path, env)
+        env.norm_reward = False # disable reward normalization for more accuracy
+        env.training = False # set to eval mode
     else:
         raise Exception("vecnormalize file not found")
     
@@ -17,8 +19,8 @@ def test_agent(model_path="models/best_model.zip", vec_normalize_path = "models/
 
     for ep in range(episodes):
         obs = env.reset()
-        total_reward = 0
         done = False
+        total_reward = 0
 
         while not done:
             action, _ = model.predict(obs, deterministic=True)
