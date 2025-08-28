@@ -46,7 +46,7 @@ def train(seed=0):
         n_epochs=10, # how many times model trains itself from step data
         gamma=0.999, # used calculating future vs immediate rewards
         gae_lambda=0.95,
-        ent_coef= 0.01, # reward for exploration
+        ent_coef= 0.01, # encouraging exploration
         max_grad_norm=0.5,
         seed=seed
 )
