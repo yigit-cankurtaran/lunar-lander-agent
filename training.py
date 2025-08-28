@@ -57,6 +57,11 @@ def train(seed=0):
         progress_bar=True
     )
 
+    train_env.save("models/vec_normalize.pkl")
+    model.save("models/final_model") # saving final model
+
+    return model, train_env
+
 
 def run_multi_seed_training(seeds=[0, 42, 123, 456, 789]):
     # multiple seeds for more robust training, more scientific but needs more time
