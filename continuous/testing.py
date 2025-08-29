@@ -5,7 +5,7 @@ import os
 
 
 def test_agent(model_path="models/best_model.zip", vec_normalize_path = "models/vec_normalize.pkl", episodes=5):
-    env = gym.make("LunarLander-v3", render_mode="human")
+    env = gym.make("LunarLander-v3", render_mode="human", continuous=True)
     env = DummyVecEnv([lambda: env])
 
     if os.path.exists(vec_normalize_path):

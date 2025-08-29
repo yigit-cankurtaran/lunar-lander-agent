@@ -17,10 +17,10 @@ def linear_schedule(initial_value):
     return schedule_func
 
 def train(seed=0):
-    train_env = make_vec_env("LunarLander-v3", n_envs=4, seed=seed)
+    train_env = make_vec_env("LunarLander-v3", n_envs=4, seed=seed, env_kwargs={"continuous": True})
     train_env = VecNormalize(train_env) # normalization for making training more stable
 
-    eval_env = DummyVecEnv([lambda: Monitor(gym.make("LunarLander-v3", render_mode=None))])
+    eval_env = DummyVecEnv([lambda: Monitor(gym.make("LunarLander-v3", continuous=True, render_mode=None))])
     eval_env = VecNormalize(eval_env, training=False)
     
     train_count = 3000000 # 3M
