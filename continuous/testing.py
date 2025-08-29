@@ -1,8 +1,8 @@
 import gymnasium as gym
 from stable_baselines3 import PPO
 from stable_baselines3.common.vec_env import VecNormalize, DummyVecEnv
+from stable_baselines3.common.evaluation import evaluate_policy
 import os
-
 
 def test_agent(model_path="models/best_model.zip", vec_normalize_path = "models/vec_normalize.pkl", episodes=5):
     env = gym.make("LunarLander-v3", render_mode="human", continuous=True)
@@ -15,20 +15,10 @@ def test_agent(model_path="models/best_model.zip", vec_normalize_path = "models/
     else:
         raise Exception("vecnormalize file not found")
     
-    model = PPO.load(model_path)
+    model = PPO.load(model_path, env=env) # linking model to env
 
-    for ep in range(episodes):
-        obs = env.reset()
-        done = False
-        total_reward = 0
-
-        while not done:
-            action, _ = model.predict(obs, deterministic=True)
-            obs, reward, done, _ = env.step(action) # different return format for vecenv
-            done = done[0]
-            total_reward += reward[0]
-
-        print(f"episode {ep+1}, reward = {total_reward:.2f}")
+    mean_reward, std_reward =evaluate_policy(model, env, n_eval_episodes=episodes, deterministic=True, render=True)
+    print(f"mean reward over {episodes} episodes: {mean_reward} +- {std_reward}")
 
     env.close()
 
