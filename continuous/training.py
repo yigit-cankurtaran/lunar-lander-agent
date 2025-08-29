@@ -28,7 +28,7 @@ def train(seed=0):
     os.makedirs("models", exist_ok=True)
     os.makedirs("logs", exist_ok=True)
 
-    stop_training = StopTrainingOnRewardThreshold(reward_threshold=220, verbose=1)
+    stop_training = StopTrainingOnRewardThreshold(reward_threshold=250, verbose=1)
 
     eval_callback = EvalCallback(
         eval_env,
