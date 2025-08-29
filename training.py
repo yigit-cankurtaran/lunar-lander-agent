@@ -10,6 +10,9 @@ import os # creating folders and such
 def linear_schedule(initial_value):
     # decaying from initial value to 0
     def schedule_func(progress_remaining):
+        # ppo and most sb3 algos expect lr to either be a number
+        # or a callable that takes progress_remaining as input
+        # this is why we use progress_remaining
         return progress_remaining * initial_value
     return schedule_func
 
