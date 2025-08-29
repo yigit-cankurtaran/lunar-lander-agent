@@ -17,8 +17,9 @@ def test_agent(model_path="models/best_model.zip", vec_normalize_path = "models/
     
     model = PPO.load(model_path, env=env) # linking model to env
 
-    mean_reward, std_reward =evaluate_policy(model, env, n_eval_episodes=episodes, deterministic=True, render=True)
-    print(f"mean reward over {episodes} episodes: {mean_reward} +- {std_reward}")
+    rewards, lengths = evaluate_policy(model, env, n_eval_episodes=episodes, deterministic=True, render=True, return_episode_rewards=True)
+    for i in range(episodes):
+        print(f"episode:{i+1}, reward:{rewards[i]}, length:{lengths[i]}")
 
     env.close()
 
