@@ -1,6 +1,7 @@
 import gymnasium as gym
 from stable_baselines3 import PPO
 from stable_baselines3.common.vec_env import VecNormalize, DummyVecEnv
+from stable_baselines3.common.evaluation import evaluate_policy
 import os
 
 
@@ -17,18 +18,12 @@ def test_agent(model_path="models/best_model.zip", vec_normalize_path = "models/
     
     model = PPO.load(model_path)
 
-    for ep in range(episodes):
-        obs = env.reset()
-        done = False
-        total_reward = 0
+    rewards, _ = evaluate_policy(model, env, n_eval_episodes=episodes,
+                                 deterministic=True, render=True,
+                                 return_episode_rewards=True)
 
-        while not done:
-            action, _ = model.predict(obs, deterministic=True)
-            obs, reward, done, _ = env.step(action) # different return format for vecenv
-            done = done[0]
-            total_reward += reward[0]
-
-        print(f"episode {ep+1}, reward = {total_reward:.2f}")
+    for i in range(episodes):
+        print(f"episode {i+1} reward: {rewards[i]}")
 
     env.close()
 
